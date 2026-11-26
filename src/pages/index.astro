@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import Skymap from '../components/Skymap.astro';
+import { url } from '../lib/url';
+import { project } from '../data/project';
+import { coordinator, organisationCount, countryCount } from '../data/network';
+import { workshops } from '../data/workshops';
+
+const latest = workshops[0];
+---
+<Base>
+  <section class="hero">
+    <div class="wrap hero__inner">
+      <div>
+        <h1><span class="nowrap">Gravitational-wave</span> cosmology with galaxy catalogues</h1>
+        <p class="hero__lede">
+          GWCats brings gravitational-wave physicists and galaxy-survey astronomers together to measure the
+          expansion of the Universe. It is a network of {organisationCount} research organisations
+          in {countryCount} countries, funded by the European Union as a Marie Skłodowska-Curie Staff Exchanges
+          project.
+        </p>
+        <div class="actions">
+          <a class="button" href={url('project/')}>About the project</a>
+          <a class="button button--ghost" href={url('workshops/')}>Workshops</a>
+        </div>
+      </div>
+      <div class="hero__art">
+        <img
+          src={url('images/gwcats-hero.jpg')}
+          width="1024"
+          height="624"
+          alt="The GWCats logo: two cats circling each other like a binary system, sending out gravitational waves across a field of distant galaxies."
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <h2>Measuring cosmic expansion with dark sirens</h2>
+        <p>
+          When two black holes or neutron stars merge, the gravitational waves they emit tell us how far away they
+          are, directly, without the calibrated distance ladder that conventional measurements rely on. Pair that
+          distance with a redshift and you have a measurement of how fast the Universe is expanding.
+        </p>
+        <p>
+          Gravitational waves alone do not give a redshift. For the rare events with a visible counterpart, the host
+          galaxy can be identified directly. Most events are dark sirens, with no counterpart, and the redshift has
+          to be inferred statistically from the galaxies that could have hosted the merger.
+        </p>
+        <p>
+          Combining many events gives a value of the Hubble constant independent of both the distance ladder and the
+          cosmic microwave background: a direct test of the Hubble tension. That needs gravitational-wave data from
+          LIGO, Virgo and KAGRA alongside galaxy catalogues from surveys such as Euclid, DESI, Rubin LSST, 4MOST and
+          WEAVE, and researchers who can work with both.
+        </p>
+      </div>
+      <Skymap />
+    </div>
+  </section>
+
+  <section class="section section--wash">
+    <div class="wrap split">
+      <div>
+        <h2>The project</h2>
+        <p>
+          GWCats is a four-year Horizon Europe project that funds research staff to spend time at partner
+          institutions, building the expertise and collaborations needed for precision gravitational-wave cosmology.
+        </p>
+        <dl class="facts">
+          <dt>Funding</dt>
+          <dd>{project.scheme}, grant agreement {project.grantAgreement}</dd>
+          <dt>Duration</dt>
+          <dd>{project.start} to {project.end}</dd>
+          <dt>Coordinator</dt>
+          <dd>{coordinator.name}</dd>
+        </dl>
+        <a class="more" href={url('project/')}>Read about the project</a>
+      </div>
+      <div>
+        <h2>Workshops</h2>
+        <div class="latest">
+          <h3><a href={latest.url}>{latest.title}</a></h3>
+          <p class="latest__meta">{latest.dates}<br />{latest.place}</p>
+          {latest.summary && <p>{latest.summary}</p>}
+        </div>
+        <a class="more" href={url('workshops/')}>See all workshops</a>
+      </div>
+    </div>
+  </section>
+</Base>

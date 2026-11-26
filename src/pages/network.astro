@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import {
+  coordinator,
+  beneficiaries,
+  associatedPartners,
+  organisationCount,
+  countryCount,
+  type Organisation,
+} from '../data/network';
+
+const groups: { title: string; intro: string; orgs: Organisation[] }[] = [
+  {
+    title: 'Coordinator',
+    intro: 'Leads the project on behalf of the consortium.',
+    orgs: [coordinator],
+  },
+  {
+    title: 'Beneficiaries',
+    intro: 'Sign the grant agreement and receive EU funding for staff exchanges.',
+    orgs: beneficiaries,
+  },
+  {
+    title: 'Associated partners',
+    intro: 'Contribute to carrying out the project, but do not sign the grant agreement or receive EU funding.',
+    orgs: associatedPartners,
+  },
+];
+---
+<Base title="Network" description={`The ${organisationCount} research organisations in ${countryCount} countries that make up the GWCats network.`}>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Network</h1>
+      <p>
+        GWCats connects {organisationCount} research organisations in {countryCount} countries, spanning
+        gravitational-wave astronomy, galaxy surveys and cosmology.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      {
+        groups.map(({ title, intro, orgs }) => (
+          <>
+            <h2>{title}</h2>
+            <p class="section__intro">{intro}</p>
+            <ul class="orgs">
+              {orgs.map((o) => (
+                <li>
+                  <a href={o.url}>{o.name}</a>
+                  <span>{o.country}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ))
+      }
+    </div>
+  </section>
+</Base>

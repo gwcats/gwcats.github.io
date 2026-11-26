@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { workshops } from '../data/workshops';
+---
+<Base title="Workshops" description="GWCats collaboration workshops on gravitational-wave cosmology with galaxy catalogues.">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Workshops</h1>
+      <p>
+        The collaboration meets once a year to discuss results from ongoing projects, explore new science and
+        organise its activities.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      {
+        workshops.map((w) => (
+          <article class="workshop">
+            <p class="workshop__when">
+              {w.dates}
+              <span>{w.place}</span>
+            </p>
+            <div>
+              <h2>{w.title}</h2>
+              {w.venue && <p class="workshop__venue">{w.venue}</p>}
+              {w.summary && <p>{w.summary}</p>}
+              {w.committees && (
+                <div class="committees">
+                  {w.committees.map((c) => (
+                    <div>
+                      <h3>{c.name}</h3>
+                      <ul>
+                        {c.members.map((m) => (
+                          <li>{m}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <a class="more" href={w.url}>Workshop website</a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Base>

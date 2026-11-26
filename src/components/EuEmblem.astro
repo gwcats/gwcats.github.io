@@ -1,0 +1,19 @@
+---
+// EU emblem drawn to the official construction: 3:2 flag, twelve stars on a
+// circle of radius h/3, each star of radius h/18.
+const W = 81, H = 54, R = H / 3, r = H / 18;
+const star = (cx: number, cy: number) =>
+  Array.from({ length: 10 }, (_, i) => {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const d = i % 2 ? r * 0.382 : r;
+    return `${(cx + d * Math.cos(a)).toFixed(2)},${(cy + d * Math.sin(a)).toFixed(2)}`;
+  }).join(' ');
+const stars = Array.from({ length: 12 }, (_, i) => {
+  const a = (i * Math.PI) / 6;
+  return star(W / 2 + R * Math.sin(a), H / 2 - R * Math.cos(a));
+});
+---
+<svg class="eu-emblem" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Flag of the European Union">
+  <rect width={W} height={H} fill="#039" />
+  {stars.map((points) => <polygon points={points} fill="#fc0" />)}
+</svg>

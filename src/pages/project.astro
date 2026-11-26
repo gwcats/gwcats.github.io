@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/url';
+import { project } from '../data/project';
+import { coordinator, beneficiaries, associatedCountries } from '../data/network';
+
+const partnerCountries = new Intl.ListFormat('en-GB').format(
+  associatedCountries.map((c) => (c.startsWith('United ') ? `the ${c}` : c)),
+);
+---
+<Base title="The project" description="GWCats: aims, funding and structure of the EU Marie Skłodowska-Curie Staff Exchanges project on gravitational-wave cosmology with galaxy catalogues.">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>The project</h1>
+      <p>
+        GWCats is funded by the European Union under Horizon Europe as a Marie Skłodowska-Curie Staff Exchanges
+        action, running from {project.start} to {project.end}.
+      </p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Background</h2>
+      <p>
+        Gravitational waves from merging compact objects offer a new and independent way to measure astronomical
+        distances. Combined with redshifts, these distances constrain cosmological parameters, including the Hubble
+        constant, where measurements from the early and late Universe currently disagree.
+      </p>
+      <p>
+        The redshift has to come from electromagnetic observations: either by identifying the host galaxy, or
+        statistically, by cross-matching each event with galaxy surveys. With detectors such as LIGO, Virgo and
+        KAGRA producing ever larger samples of events, and surveys such as Rubin LSST, Euclid, DESI, 4MOST and WEAVE
+        mapping billions of galaxies, the limit is increasingly expertise that spans both fields.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--wash">
+    <div class="wrap">
+      <h2>Aims</h2>
+      <p class="section__intro">
+        GWCats aims to deliver the most precise gravitational-wave measurement of the Hubble constant to date, and a
+        lasting foundation for collaboration between the gravitational-wave and electromagnetic communities.
+      </p>
+      <ul class="aims">
+        <li>
+          <h3>Train researchers in both fields</h3>
+          <p>
+            Build a generation of researchers fluent in gravitational-wave and electromagnetic methods, with a
+            focus on AI and high-performance computing.
+          </p>
+        </li>
+        <li>
+          <h3>Combine data across communities</h3>
+          <p>
+            Maximise the science from current and upcoming facilities through data integration and
+            cross-disciplinary collaboration.
+          </p>
+        </li>
+        <li>
+          <h3>Inform data-sharing policy</h3>
+          <p>
+            Use the project’s experience to shape how gravitational-wave and galaxy-survey collaborations share
+            their data.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <h2>Staff exchanges</h2>
+        <p>
+          MSCA Staff Exchanges fund secondments of research and innovation staff between partner organisations,
+          internationally and across sectors. Researchers at any career stage, as well as technical, managerial and administrative staff, can
+          spend between one and twelve months at a partner institution.
+        </p>
+        <p>
+          The GWCats network brings together {beneficiaries.length + 1} European beneficiaries and associated
+          partners in {partnerCountries}.
+        </p>
+        <a class="more" href={url('network/')}>See the partner organisations</a>
+      </div>
+      <div>
+        <h2>Project facts</h2>
+        <dl class="facts">
+          <dt>Full title</dt>
+          <dd>{project.title}</dd>
+          <dt>Grant agreement</dt>
+          <dd>{project.grantAgreement}</dd>
+          <dt>Programme</dt>
+          <dd>{project.programme}</dd>
+          <dt>Funding scheme</dt>
+          <dd>{project.scheme} ({project.topic})</dd>
+          <dt>Duration</dt>
+          <dd>{project.start} to {project.end}</dd>
+          <dt>EU contribution</dt>
+          <dd>{project.euContribution}</dd>
+          <dt>Coordinator</dt>
+          <dd>{coordinator.name}, {coordinator.country}</dd>
+          <dt>DOI</dt>
+          <dd><a href={`https://doi.org/${project.doi}`}>{project.doi}</a></dd>
+        </dl>
+        <a class="more" href={project.cordis}>View the project on CORDIS</a>
+      </div>
+    </div>
+  </section>
+</Base>

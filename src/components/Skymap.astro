@@ -1,0 +1,69 @@
+---
+// Illustrative dark-siren sky map, generated at build time: a mock galaxy
+// catalogue with a banana-shaped gravitational-wave localisation over it.
+const W = 560, H = 400;
+
+// Deterministic PRNG so the figure is identical on every build.
+let seed = 20260801;
+const rand = () => {
+  seed = (seed + 0x6d2b79f5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const gauss = () => Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
+
+// Galaxies: a uniform field plus clusters, so the map shows structure.
+const pts: [number, number][] = [];
+for (let i = 0; i < 380; i++) pts.push([rand() * W, rand() * H]);
+for (let c = 0; c < 16; c++) {
+  const cx = rand() * W, cy = rand() * H, s = 8 + rand() * 22, n = 10 + Math.floor(rand() * 30);
+  for (let i = 0; i < n; i++) pts.push([cx + gauss() * s, cy + gauss() * s]);
+}
+
+// Localisation: a Gaussian in polar coordinates about an off-canvas centre.
+const C = { x: 250, y: 660 }, R0 = 450, sr = 24, t0 = -Math.PI / 2 + 0.12, st = 0.17;
+const k50 = Math.sqrt(-2 * Math.log(0.5)), k90 = Math.sqrt(-2 * Math.log(0.1));
+const chi = (x: number, y: number) => {
+  const r = Math.hypot(x - C.x, y - C.y), t = Math.atan2(y - C.y, x - C.x);
+  return Math.hypot((r - R0) / sr, (t - t0) / st);
+};
+const contour = (k: number) =>
+  Array.from({ length: 145 }, (_, i) => {
+    const p = (i / 144) * 2 * Math.PI;
+    const r = R0 + k * sr * Math.cos(p), t = t0 + k * st * Math.sin(p);
+    return `${i ? 'L' : 'M'}${(C.x + r * Math.cos(t)).toFixed(1)} ${(C.y + r * Math.sin(t)).toFixed(1)}`;
+  }).join('') + 'Z';
+
+const galaxies = pts
+  .filter(([x, y]) => x > 4 && x < W - 4 && y > 4 && y < H - 4)
+  .map(([x, y]) => ({
+    x: x.toFixed(1),
+    y: y.toFixed(1),
+    r: (0.8 + 2.4 * rand() ** 3).toFixed(2),
+    host: chi(x, y) <= k90,
+  }));
+const hosts = galaxies.filter((g) => g.host).length;
+
+// Label anchor on the 90% contour's outer edge.
+const lab = { x: C.x + (R0 + k90 * sr + 10) * Math.cos(t0 + 0.9 * k90 * st), y: C.y + (R0 + k90 * sr + 10) * Math.sin(t0 + 0.9 * k90 * st) };
+---
+<figure class="skymap">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="skymap-title">
+    <title id="skymap-title">Illustrative gravitational-wave sky localisation over a galaxy catalogue, with {hosts} candidate host galaxies inside the 90% credible region.</title>
+    <g class="skymap-grid">
+      {[80, 160, 240, 320].map((y) => <line x1="0" x2={W} y1={y} y2={y} />)}
+      {[80, 160, 240, 320, 400, 480].map((x) => <line y1="0" y2={H} x1={x} x2={x} />)}
+    </g>
+    <path class="skymap-region" d={contour(k90)} />
+    <path class="skymap-contour" d={contour(k90)} />
+    <path class="skymap-contour skymap-contour--inner" d={contour(k50)} />
+    {galaxies.map((g) => <circle class={g.host ? 'host' : undefined} cx={g.x} cy={g.y} r={g.r} />)}
+    <text x={lab.x.toFixed(1)} y={lab.y.toFixed(1)}>90%</text>
+  </svg>
+  <figcaption>
+    An illustrative dark siren. The shaded band is where a gravitational-wave event could have come from, with
+    50% and 90% credible contours. The {hosts} highlighted galaxies inside it are candidate hosts, and their
+    redshifts, weighted by probability, stand in for the missing counterpart.
+  </figcaption>
+</figure>
